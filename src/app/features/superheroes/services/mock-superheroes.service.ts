@@ -1,4 +1,5 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, signal, WritableSignal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { DELAY_MS } from '@constants';
 import {
   NameAlreadyExistsException,
@@ -90,7 +91,7 @@ export class MockSuperheroesService implements SuperheroesRepository {
   }
 
   getAll(): Observable<Superhero[]> {
-    return scheduled([this._superheroes()], asyncScheduler).pipe(
+    return toObservable(computed(() => this._superheroes())).pipe(
       delay(this._delay)
     );
   }

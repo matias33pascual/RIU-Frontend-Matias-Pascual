@@ -1,0 +1,6 @@
+<app-superheroes-list
+  [superheroesList]="superheroesList()"
+  (addEvent)="addSuperhero()"
+  (editEvent)="editSuperhero($event)"
+  (deleteEvent)="deleteSuperhero($event)"
+/>
