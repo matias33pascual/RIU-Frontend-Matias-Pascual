@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { DELAY_MS } from '@constants';
 import {
   NameAlreadyExistsException,
   SuperheroNotFoundException,
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root',
 })
 export class MockSuperheroesService implements SuperheroesRepository {
-  private readonly _delay = 1000;
+  private readonly _delay = DELAY_MS;
 
   private _superheroes: WritableSignal<Superhero[]> = signal<Superhero[]>([
     { id: 'a', name: 'Superman' },
@@ -90,7 +90,9 @@ export class MockSuperheroesService implements SuperheroesRepository {
   }
 
   getAll(): Observable<Superhero[]> {
-    return toObservable(this._superheroes).pipe(delay(this._delay));
+    return scheduled([this._superheroes()], asyncScheduler).pipe(
+      delay(this._delay)
+    );
   }
 
   getById(id: string): Observable<Superhero | null> {
