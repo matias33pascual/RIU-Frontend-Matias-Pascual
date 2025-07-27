@@ -25,9 +25,6 @@ export class MockSuperheroesService implements SuperheroesRepository {
   ]);
 
   create(superhero: Superhero): Observable<Superhero> {
-    console.log('Creating superhero:', superhero);
-    
-    
     if (this._isNameAlreadyUsed(superhero.name)) {
       return scheduled([undefined], asyncScheduler).pipe(
         delay(this._delay),

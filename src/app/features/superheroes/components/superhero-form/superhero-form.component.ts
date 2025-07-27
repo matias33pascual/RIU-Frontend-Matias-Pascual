@@ -11,8 +11,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UppercaseInputDirective } from '@shared/directives/uppercase-input.directive';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
-import { UppercaseInputDirective } from 'src/app/core/shared/directives/uppercase-input.directive';
 
 @Component({
   selector: 'app-superhero-form',

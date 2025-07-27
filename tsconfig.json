@@ -21,7 +21,9 @@
     "paths": {
       "@superheroes/*": ["src/app/features/superheroes/*"],
       "@exceptions": ["src/app/core/exceptions/index"],
-      "@constants": ["src/app/core/constants/constants"]
+      "@constants": ["src/app/core/constants/constants"],
+      "@shared/*": ["src/app/shared/*"],
+      "@core/*": ["src/app/core/*"],
     }
   },
   "angularCompilerOptions": {
