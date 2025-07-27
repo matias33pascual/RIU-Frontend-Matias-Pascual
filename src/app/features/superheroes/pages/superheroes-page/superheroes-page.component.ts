@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { SuperheroFormComponent } from '@superheroes/components/superhero-form/superhero-form.component';
 import { SuperheroSearchComponent } from '@superheroes/components/superhero-search/superhero-search.component';
@@ -16,7 +17,11 @@ import { MockSuperheroesService } from '@superheroes/services/mock-superheroes.s
 
 @Component({
   selector: 'app-superheroes-page',
-  imports: [SuperheroesListComponent, SuperheroSearchComponent],
+  imports: [
+    SuperheroesListComponent,
+    SuperheroSearchComponent,
+    MatButtonModule,
+  ],
   templateUrl: './superheroes-page.component.html',
   styleUrl: './superheroes-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
