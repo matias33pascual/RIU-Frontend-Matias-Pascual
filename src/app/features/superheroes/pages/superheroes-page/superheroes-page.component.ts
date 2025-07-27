@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { SuperheroFormComponent } from '@superheroes/components/superhero-form/superhero-form.component';
 import { SuperheroSearchComponent } from '@superheroes/components/superhero-search/superhero-search.component';
 import { SuperheroesListComponent } from '@superheroes/components/superheroes-list/superheroes-list.component';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
@@ -14,12 +15,18 @@ import { MockSuperheroesService } from '@superheroes/services/mock-superheroes.s
 
 @Component({
   selector: 'app-superheroes-page',
-  imports: [SuperheroesListComponent, SuperheroSearchComponent],
+  imports: [
+    SuperheroesListComponent,
+    SuperheroSearchComponent,
+    SuperheroFormComponent,
+  ],
   templateUrl: './superheroes-page.component.html',
   styleUrl: './superheroes-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuperheroesPageComponent {
+  selectedSuperhero = signal<Superhero | null>(null);
+
   private readonly _superheroesService: SuperheroesRepository = inject(
     MockSuperheroesService
   );
@@ -42,11 +49,9 @@ export class SuperheroesPageComponent {
 
   searchByName(name: string) {
     if (name.trim() === '') {
-      // Si el término está vacío, mostrar todos los superhéroes
       this._isSearching.set(false);
       this._searchResults.set([]);
     } else {
-      // Buscar por nombre
       this._isSearching.set(true);
       this._superheroesService.getByName(name).subscribe({
         next: (results) => {
@@ -66,12 +71,43 @@ export class SuperheroesPageComponent {
     this.searchTerm.set('');
   }
 
-  addSuperhero() {
-    throw new Error('Method not implemented.');
+  addSuperhero() {}
+
+  saveOrUpdateSuperhero($event: Superhero) {
+    if ($event.id !== null) {
+      this._editSuperhero($event);
+    } else {
+      this._createNewSuperhero($event);
+    }
+  }
+
+  private _createNewSuperhero(superhero: Superhero) {
+    this._superheroesService.create(superhero).subscribe({
+      next: () => {
+        this.selectedSuperhero.set(null);
+        this.searchTerm.set('');
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
+  }
+
+  private _editSuperhero(superhero: Superhero) {
+    this._superheroesService.update(superhero).subscribe({
+      next: () => {
+        this._isSearching.set(false);
+        this._searchResults.set([]);
+        this.searchTerm.set('');
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
   }
 
   editSuperhero($event: Superhero) {
-    throw new Error('Method not implemented.');
+    this.selectedSuperhero.set($event);
   }
 
   deleteSuperhero($event: Superhero) {
