@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  effect,
-  Inject,
-  input,
-  Optional,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, Inject, Optional, output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -20,6 +12,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
+import { UppercaseInputDirective } from 'src/app/core/shared/directives/uppercase-input.directive';
 
 @Component({
   selector: 'app-superhero-form',
@@ -30,6 +23,7 @@ import { Superhero } from '@superheroes/interfaces/superhero.interface';
     MatCardModule,
     CommonModule,
     ReactiveFormsModule,
+    UppercaseInputDirective,
   ],
   templateUrl: './superhero-form.component.html',
   styleUrl: './superhero-form.component.scss',
