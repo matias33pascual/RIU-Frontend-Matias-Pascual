@@ -1,0 +1,21 @@
+.superhero-form-card {
+  padding: 0.5rem;
+  display: flex;
+  gap: 1rem;
+
+  .card-title {
+    font-variant: small-caps;
+    font-size: 1.5rem;
+  }
+
+  .card-subtitle {
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  .superhero-form-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+}

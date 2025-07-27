@@ -1,8 +1,10 @@
-<app-superhero-search (searchByName)="searchByName($event)" />
+<div>
+  <app-superhero-search (searchByName)="searchByName($event)" />
 
-<app-superheroes-list
-  [superheroesList]="superheroesList()"
-  (addEvent)="addSuperhero()"
-  (editEvent)="editSuperhero($event)"
-  (deleteEvent)="deleteSuperhero($event)"
-/>
+  <app-superheroes-list
+    [superheroesList]="superheroesList()"
+    (addEvent)="addSuperhero()"
+    (editEvent)="editSuperhero($event)"
+    (deleteEvent)="deleteSuperhero($event)"
+  />
+</div>
