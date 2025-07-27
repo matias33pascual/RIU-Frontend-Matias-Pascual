@@ -17,13 +17,13 @@
           required
           type="text"
         />
-        <mat-error *ngIf="superheroForm.controls.name.errors?.['required']">
+        <mat-error *ngIf="superheroForm.controls['name'].errors?.['required']">
           El nombre es obligatorio
         </mat-error>
-        <mat-error *ngIf="superheroForm.controls.name.errors?.['minlength']">
+        <mat-error *ngIf="superheroForm.controls['name'].errors?.['minlength']">
           Mínimo 2 caracteres
         </mat-error>
-        <mat-error *ngIf="superheroForm.controls.name.errors?.['maxlength']">
+        <mat-error *ngIf="superheroForm.controls['name'].errors?.['maxlength']">
           Máximo 50 caracteres
         </mat-error>
       </mat-form-field>

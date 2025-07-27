@@ -1,12 +1,8 @@
-<app-superhero-form
-  (saveOrUpdateSuperhero)="saveOrUpdateSuperhero($event)"
-  [superheroForUpdate]="selectedSuperhero()"
-/>
-
 <app-superhero-search (searchByName)="searchByName($event)" />
 
 <app-superheroes-list
   [superheroesList]="superheroesList()"
+  (addEvent)="addSuperhero()"
   (editEvent)="editSuperhero($event)"
   (deleteEvent)="deleteSuperhero($event)"
 />

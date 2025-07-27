@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, input, output, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  Inject,
+  input,
+  Optional,
+  output,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,6 +16,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
@@ -26,26 +35,26 @@ import { Superhero } from '@superheroes/interfaces/superhero.interface';
   styleUrl: './superhero-form.component.scss',
 })
 export class SuperheroFormComponent {
-  superheroForUpdate = input<Superhero | null>(null);
-
-  saveOrUpdateSuperhero = output<Superhero>();
   cancel = output<void>();
+  saveOrUpdateSuperhero = output<Superhero>();
 
-  superheroForm = new FormGroup({
-    name: new FormControl(this.superheroForUpdate()?.name ?? '', [
-      Validators.required,
-      Validators.minLength(2),
-      Validators.maxLength(50),
-    ]),
-  });
+  superheroForm: FormGroup;
 
-  private readonly _updateFormEffect = effect(() => {
-    const superhero = this.superheroForUpdate();
+  constructor(
+    @Optional()
+    @Inject(MAT_DIALOG_DATA)
+    public data: { superheroForUpdate: Superhero | null } | null
+  ) {
+    const superheroToEdit = this.data?.superheroForUpdate ?? null;
 
-    this.superheroForm.patchValue({
-      name: superhero?.name ?? '',
+    this.superheroForm = new FormGroup({
+      name: new FormControl(superheroToEdit?.name ?? '', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+      ]),
     });
-  });
+  }
 
   onSave() {
     if (this.superheroForm.invalid) {
@@ -54,21 +63,16 @@ export class SuperheroFormComponent {
 
     const name = this.superheroForm.get('name')?.value?.trim() ?? '';
 
-    const superhero: Superhero = this.superheroForUpdate()
-      ? {
-          ...this.superheroForUpdate(),
-          name,
-        }
-      : {
-          name,
-        };
+    const superhero: Superhero = { ...this.data?.superheroForUpdate, name };
 
     this.superheroForm.reset();
+
     this.saveOrUpdateSuperhero.emit(superhero);
   }
 
   onCancel() {
     this.superheroForm.reset();
+
     this.cancel.emit();
   }
 }

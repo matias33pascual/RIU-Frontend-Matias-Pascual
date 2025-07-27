@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
 import { SuperheroFormComponent } from '@superheroes/components/superhero-form/superhero-form.component';
 import { SuperheroSearchComponent } from '@superheroes/components/superhero-search/superhero-search.component';
 import { SuperheroesListComponent } from '@superheroes/components/superheroes-list/superheroes-list.component';
@@ -15,18 +16,12 @@ import { MockSuperheroesService } from '@superheroes/services/mock-superheroes.s
 
 @Component({
   selector: 'app-superheroes-page',
-  imports: [
-    SuperheroesListComponent,
-    SuperheroSearchComponent,
-    SuperheroFormComponent,
-  ],
+  imports: [SuperheroesListComponent, SuperheroSearchComponent],
   templateUrl: './superheroes-page.component.html',
   styleUrl: './superheroes-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuperheroesPageComponent {
-  selectedSuperhero = signal<Superhero | null>(null);
-
   private readonly _superheroesService: SuperheroesRepository = inject(
     MockSuperheroesService
   );
@@ -46,6 +41,8 @@ export class SuperheroesPageComponent {
   );
 
   readonly searchTerm = signal('');
+
+  constructor(private dialog: MatDialog) {}
 
   searchByName(name: string) {
     if (name.trim() === '') {
@@ -71,20 +68,59 @@ export class SuperheroesPageComponent {
     this.searchTerm.set('');
   }
 
-  addSuperhero() {}
+  addSuperhero() {
+    this._openSuperheroForm(null);
+  }
+
+  editSuperhero($event: Superhero) {
+    this._openSuperheroForm($event);
+  }
 
   saveOrUpdateSuperhero($event: Superhero) {
-    if ($event.id !== null) {
+    if ($event.id) {
       this._editSuperhero($event);
     } else {
       this._createNewSuperhero($event);
     }
   }
 
+  deleteSuperhero($event: Superhero) {
+    if (confirm(`Are you sure you want to delete ${$event.name}?`)) {
+      this._superheroesService.delete($event.id!).subscribe({
+        error: (err) => {
+          alert(err.message);
+        },
+      });
+    }
+  }
+
+  private _openSuperheroForm(superhero: Superhero | null = null) {
+    const dialogRef = this.dialog.open(SuperheroFormComponent, {
+      data: { superheroForUpdate: superhero },
+      width: '600px',
+      disableClose: true,
+    });
+
+    const saveSub = dialogRef.componentInstance.saveOrUpdateSuperhero.subscribe(
+      (result: Superhero) => {
+        this.saveOrUpdateSuperhero(result);
+        dialogRef.close();
+      }
+    );
+
+    const cancelSub = dialogRef.componentInstance.cancel.subscribe(() => {
+      dialogRef.close();
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      saveSub.unsubscribe();
+      cancelSub.unsubscribe();
+    });
+  }
+
   private _createNewSuperhero(superhero: Superhero) {
     this._superheroesService.create(superhero).subscribe({
       next: () => {
-        this.selectedSuperhero.set(null);
         this.searchTerm.set('');
       },
       error: (err) => {
@@ -104,19 +140,5 @@ export class SuperheroesPageComponent {
         alert(err.message);
       },
     });
-  }
-
-  editSuperhero($event: Superhero) {
-    this.selectedSuperhero.set($event);
-  }
-
-  deleteSuperhero($event: Superhero) {
-    if (confirm(`Are you sure you want to delete ${$event.name}?`)) {
-      this._superheroesService.delete($event.id!).subscribe({
-        error: (err) => {
-          alert(err.message);
-        },
-      });
-    }
   }
 }
