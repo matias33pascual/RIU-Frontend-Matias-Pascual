@@ -19,7 +19,8 @@
     "module": "ES2022",
     "baseUrl": "./",
     "paths": {
-      "@superheroes/*": ["src/app/features/superheroes/*"]
+      "@superheroes/*": ["src/app/features/superheroes/*"],
+      "@exceptions": ["src/app/core/exceptions/index"]
     }
   },
   "angularCompilerOptions": {
