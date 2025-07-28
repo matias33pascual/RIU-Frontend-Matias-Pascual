@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -14,6 +15,8 @@ import { SuperheroesListComponent } from '@superheroes/components/superheroes-li
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
 import { SuperheroesRepository } from '@superheroes/interfaces/superheroes.repository';
 import { MockSuperheroesService } from '@superheroes/services/mock-superheroes.service';
+import { subscribe } from 'diagnostics_channel';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-superheroes-page',
@@ -31,36 +34,46 @@ export class SuperheroesPageComponent {
     MockSuperheroesService
   );
 
-  private readonly _allSuperheroes = toSignal(
-    this._superheroesService.getAll(),
-    {
-      initialValue: [],
-    }
-  );
-
+  private readonly _allSuperheroes = signal<Superhero[]>([]);
   private readonly _searchResults = signal<Superhero[]>([]);
   private readonly _isSearching = signal<boolean>(false);
 
-  readonly superheroesList = computed(() =>
-    this._isSearching() ? this._searchResults() : this._allSuperheroes()
-  );
-
   readonly searchTerm = signal('');
+  readonly superheroesList = signal<Superhero[]>([]);
 
-  constructor(private dialog: MatDialog) {}
+  private readonly _syncSuperheroesListEffect = effect(() => {
+    const isSearching = this._isSearching();
+
+    this.superheroesList.set(
+      isSearching ? this._searchResults() : this._allSuperheroes()
+    );
+  });
+
+  constructor(private dialog: MatDialog) {
+    this._superheroesService.getAll().subscribe({
+      next: (results) => {
+        this._allSuperheroes.set(results);
+      },
+      error: (error) => {
+        console.error('Error fetching superheroes:', error);
+      },
+    });
+  }
 
   searchByName(name: string) {
-    if (name.trim() === '') {
+    this.searchTerm.set(name.trim());
+
+    if (this.searchTerm() === '') {
       this._isSearching.set(false);
       this._searchResults.set([]);
     } else {
       this._isSearching.set(true);
+
       this._superheroesService.getByName(name).subscribe({
         next: (results) => {
           this._searchResults.set(results);
         },
         error: (error) => {
-          console.error('Error searching superheroes:', error);
           this._searchResults.set([]);
         },
       });
@@ -90,11 +103,37 @@ export class SuperheroesPageComponent {
   }
 
   deleteSuperhero($event: Superhero) {
-    if (confirm(`Are you sure you want to delete ${$event.name}?`)) {
+    if (confirm(`¿Seguro que querés borrar a ${$event.name}?`)) {
+      const currentSearchTerm = this.searchTerm();
+
       this._superheroesService.delete($event.id!).subscribe({
-        error: (err) => {
-          alert(err.message);
+        next: () => {
+          this._superheroesService.getAll().subscribe({
+            next: (allResults) => {
+              this._allSuperheroes.set(allResults);
+
+              if (this._isSearching()) {
+                this._superheroesService
+                  .getByName(currentSearchTerm)
+                  .subscribe({
+                    next: (filtered) => {
+                      this._searchResults.set(filtered);
+                      this._isSearching.set(true);
+                    },
+                    error: (error) => {
+                      console.error('Error fetching filtered heroes:', error);
+                      this._searchResults.set([]);
+                    },
+                  });
+              }
+            },
+            error: (error) => {
+              console.error('Error fetching all heroes:', error);
+              this._allSuperheroes.set([]);
+            },
+          });
         },
+        error: (err) => alert(err.message),
       });
     }
   }
