@@ -11,3 +11,10 @@
   padding: 0.5rem;
   background-color: var(--mat-sys-surface);
 }
+
+.no-data {
+  text-align: center;
+  padding: 1rem;
+  gap: 0.5rem;
+  color: var(--mat-sys-on-surface);
+}
