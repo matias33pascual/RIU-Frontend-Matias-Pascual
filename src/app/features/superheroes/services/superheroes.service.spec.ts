@@ -42,9 +42,9 @@ describe('MockSuperheroesService', () => {
   describe('create method', () => {
     it('should create a new superhero', fakeAsync(() => {
       const newSuperhero: Superhero = {
-        name: 'Aquaman',
-        realName: 'Arthur Curry',
-        superpower: 'Can breathe underwater and talk to fish',
+        name: 'Nightwing',
+        realName: 'Dick Grayson',
+        superpower: 'Acrobacias, artes marciales, liderazgo',
       };
 
       let result: Superhero | undefined;
@@ -56,7 +56,7 @@ describe('MockSuperheroesService', () => {
       tick(delayTime);
 
       expect(result).toBeDefined();
-      expect(result?.name).toBe('Aquaman');
+      expect(result?.name).toBe('Nightwing');
       expect(result?.id).toBeDefined();
     }));
 
@@ -64,7 +64,7 @@ describe('MockSuperheroesService', () => {
       const existingSuperhero: Superhero = {
         name: 'Superman',
         realName: 'Clark Kent',
-        superpower: 'Super strength, flight, heat vision',
+        superpower: 'Súper fuerza, vuelo, visión de calor',
       };
 
       let error: any;
@@ -86,7 +86,7 @@ describe('MockSuperheroesService', () => {
       const existingSuperhero: Superhero = {
         name: 'SUPERMAN',
         realName: 'Clark Kent',
-        superpower: 'Super strength, flight, heat vision',
+        superpower: 'Súper fuerza, vuelo, visión de calor',
       };
 
       let error: any;
@@ -110,7 +110,7 @@ describe('MockSuperheroesService', () => {
         id: '1738041600000001',
         name: 'Superman Prime',
         realName: 'Clark Kent',
-        superpower: 'Super strength, flight, heat vision, and more',
+        superpower: 'Súper fuerza, vuelo, visión de calor y más',
       };
 
       let result: Superhero | undefined;
@@ -166,7 +166,7 @@ describe('MockSuperheroesService', () => {
         id: '1738041600000001',
         name: 'Batman',
         realName: 'Bruce Wayne',
-        superpower: 'Intellect, martial arts, technology',
+        superpower: 'Intelecto, artes marciales, tecnología',
       };
 
       let error: any;
@@ -195,7 +195,7 @@ describe('MockSuperheroesService', () => {
         id: '1738041600000001',
         name: 'Superman',
         realName: 'Clark Kent',
-        superpower: 'Super strength, flight, heat vision',
+        superpower: 'Súper fuerza, vuelo, visión de calor',
       };
 
       let result: Superhero | undefined;
@@ -222,7 +222,7 @@ describe('MockSuperheroesService', () => {
         id: '1738041600000001',
         name: 'superman',
         realName: 'Clark Kent',
-        superpower: 'Super strength, flight, heat vision',
+        superpower: 'Súper fuerza, vuelo, visión de calor',
       };
 
       let result: Superhero | undefined;
@@ -268,7 +268,7 @@ describe('MockSuperheroesService', () => {
       tick(delayTime);
 
       expect(superheroes.find((s) => s.id === idToDelete)).toBeUndefined();
-      expect(superheroes.length).toBe(4);
+      expect(superheroes.length).toBe(34);
     }));
 
     it('should throw SuperheroNotFoundException if superhero does not exist', fakeAsync(() => {
@@ -305,7 +305,7 @@ describe('MockSuperheroesService', () => {
       tick(delayTime);
 
       expect(result).toBeDefined();
-      expect(result?.length).toBe(5);
+      expect(result?.length).toBe(35);
       expect(result).toContain(jasmine.objectContaining({ name: 'Superman' }));
       expect(result).toContain(jasmine.objectContaining({ name: 'Batman' }));
     }));
@@ -375,7 +375,7 @@ describe('MockSuperheroesService', () => {
       tick(delayTime);
 
       expect(result).toBeDefined();
-      expect(result?.length).toBe(3);
+      expect(result?.length).toBe(8);
       expect(result?.map((s) => s.name)).toContain('Superman');
       expect(result?.map((s) => s.name)).toContain('Batman');
       expect(result?.map((s) => s.name)).toContain('Wonder Woman');
@@ -406,7 +406,7 @@ describe('MockSuperheroesService', () => {
       tick(delayTime);
 
       expect(result).toBeDefined();
-      expect(result?.length).toBe(3);
+      expect(result?.length).toBe(8);
     }));
 
     it('should find partial matches', fakeAsync(() => {
@@ -428,9 +428,9 @@ describe('MockSuperheroesService', () => {
   describe('integration tests', () => {
     it('should create, update, and delete a superhero successfully', fakeAsync(() => {
       const newSuperhero: Superhero = {
-        name: 'Green Arrow',
-        realName: 'Oliver Queen',
-        superpower: 'Archery',
+        name: 'Red Hood',
+        realName: 'Jason Todd',
+        superpower: 'Combate, armas de fuego, táctica',
       };
       let createdSuperhero: Superhero | undefined;
 
@@ -441,13 +441,13 @@ describe('MockSuperheroesService', () => {
       tick(delayTime);
 
       expect(createdSuperhero).toBeDefined();
-      expect(createdSuperhero?.name).toBe('Green Arrow');
+      expect(createdSuperhero?.name).toBe('Red Hood');
 
       const updatedSuperhero: Superhero = {
         id: createdSuperhero!.id,
-        name: 'Green Arrow Updated',
-        realName: 'Oliver Queen',
-        superpower: 'Master archer',
+        name: 'Red Hood Updated',
+        realName: 'Jason Todd',
+        superpower: 'Combate avanzado, armas especializadas',
       };
 
       let updateResult: Superhero | undefined;
@@ -464,7 +464,7 @@ describe('MockSuperheroesService', () => {
 
       tick(delayTime);
 
-      expect(updateResult?.name).toBe('Green Arrow Updated');
+      expect(updateResult?.name).toBe('Red Hood Updated');
 
       let deleteCompleted = false;
 
