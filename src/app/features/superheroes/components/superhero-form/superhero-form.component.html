@@ -79,25 +79,7 @@
         >
           Máximo 100 caracteres
         </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Fecha de Nacimiento</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          formControlName="birthDate"
-          placeholder="Elige una fecha"
-          required
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error
-          *ngIf="superheroForm.controls['birthDate'].errors?.['required']"
-        >
-          La fecha de nacimiento es obligatoria
-        </mat-error>
-      </mat-form-field>
+      </mat-form-field>      
     </form>
   </mat-card-content>
 

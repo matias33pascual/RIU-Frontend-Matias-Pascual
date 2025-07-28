@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,8 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
-
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-superheroes-list',

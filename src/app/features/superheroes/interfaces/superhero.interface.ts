@@ -3,5 +3,4 @@ export interface Superhero {
   name: string;
   realName: string;
   superpower: string;
-  birthDate: Date;
 }

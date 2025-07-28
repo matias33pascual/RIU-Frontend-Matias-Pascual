@@ -62,9 +62,6 @@ export class SuperheroFormComponent {
         Validators.minLength(2),
         Validators.maxLength(100),
       ]),
-      birthDate: new FormControl(superheroToEdit?.birthDate ?? null, [
-        Validators.required,
-      ]),
     });
   }
 

@@ -45,7 +45,6 @@ describe('MockSuperheroesService', () => {
         name: 'Aquaman',
         realName: 'Arthur Curry',
         superpower: 'Can breathe underwater and talk to fish',
-        birthDate: new Date('1941-11-01'),
       };
 
       let result: Superhero | undefined;
@@ -66,7 +65,6 @@ describe('MockSuperheroesService', () => {
         name: 'Superman',
         realName: 'Clark Kent',
         superpower: 'Super strength, flight, heat vision',
-        birthDate: new Date('1938-04-18'),
       };
 
       let error: any;
@@ -89,7 +87,6 @@ describe('MockSuperheroesService', () => {
         name: 'SUPERMAN',
         realName: 'Clark Kent',
         superpower: 'Super strength, flight, heat vision',
-        birthDate: new Date('1938-04-18'),
       };
 
       let error: any;
@@ -114,7 +111,6 @@ describe('MockSuperheroesService', () => {
         name: 'Superman Prime',
         realName: 'Clark Kent',
         superpower: 'Super strength, flight, heat vision, and more',
-        birthDate: new Date('1938-04-18'),
       };
 
       let result: Superhero | undefined;
@@ -142,7 +138,6 @@ describe('MockSuperheroesService', () => {
         name: 'Non Existent',
         realName: 'Non Existent',
         superpower: 'Non Existent',
-        birthDate: new Date(),
       };
 
       let error: any;
@@ -172,7 +167,6 @@ describe('MockSuperheroesService', () => {
         name: 'Batman',
         realName: 'Bruce Wayne',
         superpower: 'Intellect, martial arts, technology',
-        birthDate: new Date('1939-05-27'),
       };
 
       let error: any;
@@ -202,7 +196,6 @@ describe('MockSuperheroesService', () => {
         name: 'Superman',
         realName: 'Clark Kent',
         superpower: 'Super strength, flight, heat vision',
-        birthDate: new Date('1938-04-18'),
       };
 
       let result: Superhero | undefined;
@@ -230,7 +223,6 @@ describe('MockSuperheroesService', () => {
         name: 'superman',
         realName: 'Clark Kent',
         superpower: 'Super strength, flight, heat vision',
-        birthDate: new Date('1938-04-18'),
       };
 
       let result: Superhero | undefined;
@@ -439,7 +431,6 @@ describe('MockSuperheroesService', () => {
         name: 'Green Arrow',
         realName: 'Oliver Queen',
         superpower: 'Archery',
-        birthDate: new Date('1941-11-01'),
       };
       let createdSuperhero: Superhero | undefined;
 
@@ -457,7 +448,6 @@ describe('MockSuperheroesService', () => {
         name: 'Green Arrow Updated',
         realName: 'Oliver Queen',
         superpower: 'Master archer',
-        birthDate: new Date('1941-11-01'),
       };
 
       let updateResult: Superhero | undefined;
