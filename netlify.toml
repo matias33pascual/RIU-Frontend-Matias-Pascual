@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build:ssr"
+  publish = "dist/riu-frontend-matias-pascual/browser"
+
+[[plugins]]
+  package = "@netlify/angular-runtime"
+  [plugins.inputs]
+    version = "2.4.0"
+
+# Redirección para SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
