@@ -137,9 +137,14 @@ export class SuperheroesPageComponent {
   private _editSuperhero(superhero: Superhero) {
     this._superheroesService.update(superhero).subscribe({
       next: () => {
-        this._isSearching.set(false);
-        this._searchResults.set([]);
-        this.searchTerm.set('');
+        if (this._isSearching()) {
+          const currentSearchTerm = this.searchTerm();
+          const allSuperheroes = this._allSuperheroes();
+          const newResults = allSuperheroes.filter((hero) =>
+            hero.name.toLowerCase().includes(currentSearchTerm.toLowerCase())
+          );
+          this._searchResults.set(newResults);
+        }
       },
       error: (err) => {
         alert(err.message);

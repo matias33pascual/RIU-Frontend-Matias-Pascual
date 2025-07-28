@@ -28,6 +28,76 @@
           Máximo 50 caracteres
         </mat-error>
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre Real</mat-label>
+        <input
+          matInput
+          formControlName="realName"
+          placeholder="Escribe el nombre real"
+          required
+          type="text"
+        />
+        <mat-error
+          *ngIf="superheroForm.controls['realName'].errors?.['required']"
+        >
+          El nombre real es obligatorio
+        </mat-error>
+        <mat-error
+          *ngIf="superheroForm.controls['realName'].errors?.['minlength']"
+        >
+          Mínimo 2 caracteres
+        </mat-error>
+        <mat-error
+          *ngIf="superheroForm.controls['realName'].errors?.['maxlength']"
+        >
+          Máximo 50 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Superpoder</mat-label>
+        <input
+          matInput
+          formControlName="superpower"
+          placeholder="Escribe el superpoder"
+          required
+          type="text"
+        />
+        <mat-error
+          *ngIf="superheroForm.controls['superpower'].errors?.['required']"
+        >
+          El superpoder es obligatorio
+        </mat-error>
+        <mat-error
+          *ngIf="superheroForm.controls['superpower'].errors?.['minlength']"
+        >
+          Mínimo 2 caracteres
+        </mat-error>
+        <mat-error
+          *ngIf="superheroForm.controls['superpower'].errors?.['maxlength']"
+        >
+          Máximo 100 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="birthDate"
+          placeholder="Elige una fecha"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error
+          *ngIf="superheroForm.controls['birthDate'].errors?.['required']"
+        >
+          La fecha de nacimiento es obligatoria
+        </mat-error>
+      </mat-form-field>
     </form>
   </mat-card-content>
 

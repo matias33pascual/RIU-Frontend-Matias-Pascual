@@ -10,6 +10,23 @@
       <td mat-cell *matCellDef="let superhero">{{ superhero.name }}</td>
     </ng-container>
 
+    <ng-container matColumnDef="realName">
+      <th mat-header-cell *matHeaderCellDef>Nombre Real</th>
+      <td mat-cell *matCellDef="let superhero">{{ superhero.realName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="superpower">
+      <th mat-header-cell *matHeaderCellDef>Superpoder</th>
+      <td mat-cell *matCellDef="let superhero">{{ superhero.superpower }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="birthDate">
+      <th mat-header-cell *matHeaderCellDef>Fecha de Nacimiento</th>
+      <td mat-cell *matCellDef="let superhero">
+        {{ superhero.birthDate | date : "dd/MM/yyyy" }}
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let superhero">
@@ -30,10 +47,30 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['position', 'name', 'actions']"></tr>
+    <tr
+      mat-header-row
+      *matHeaderRowDef="[
+        'position',
+        'name',
+        'realName',
+        'superpower',
+        'birthDate',
+        'actions'
+      ]"
+    ></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: ['position', 'name', 'actions']"
+      *matRowDef="
+        let row;
+        columns: [
+          'position',
+          'name',
+          'realName',
+          'superpower',
+          'birthDate',
+          'actions'
+        ]
+      "
     ></tr>
   </table>
 

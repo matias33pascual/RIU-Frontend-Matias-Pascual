@@ -14,9 +14,17 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
 
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-superheroes-list',
-  imports: [MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule],
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule,
+    CommonModule,
+  ],
   templateUrl: './superheroes-list.component.html',
   styleUrl: './superheroes-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +42,8 @@ export class SuperheroesListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private readonly _updateDataSourceEffect: EffectRef = effect(() => {
-    this.dataSource.data = this.superheroesList();
+    const data = this.superheroesList();
+    this.dataSource.data = [...data];
   });
 
   ngAfterViewInit() {

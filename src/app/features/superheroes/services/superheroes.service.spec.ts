@@ -1,4 +1,9 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DELAY_MS } from '@constants';
 import {
   DEFAULT_NAME_ALREADY_EXISTS_MESSAGE,
@@ -11,10 +16,23 @@ import { MockSuperheroesService } from '@superheroes/services/mock-superheroes.s
 
 describe('MockSuperheroesService', () => {
   let service: MockSuperheroesService;
+  let httpTestingController: HttpTestingController;
   const delayTime = DELAY_MS;
 
   beforeEach(() => {
-    service = new MockSuperheroesService();
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        MockSuperheroesService,
+      ],
+    });
+    service = TestBed.inject(MockSuperheroesService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpTestingController.verify();
   });
 
   it('should be created', () => {
@@ -25,6 +43,9 @@ describe('MockSuperheroesService', () => {
     it('should create a new superhero', fakeAsync(() => {
       const newSuperhero: Superhero = {
         name: 'Aquaman',
+        realName: 'Arthur Curry',
+        superpower: 'Can breathe underwater and talk to fish',
+        birthDate: new Date('1941-11-01'),
       };
 
       let result: Superhero | undefined;
@@ -43,6 +64,9 @@ describe('MockSuperheroesService', () => {
     it('should throw NameAlreadyExistsException if superhero name already exists', fakeAsync(() => {
       const existingSuperhero: Superhero = {
         name: 'Superman',
+        realName: 'Clark Kent',
+        superpower: 'Super strength, flight, heat vision',
+        birthDate: new Date('1938-04-18'),
       };
 
       let error: any;
@@ -63,6 +87,9 @@ describe('MockSuperheroesService', () => {
     it('should be case insensitive when checking for existing names', fakeAsync(() => {
       const existingSuperhero: Superhero = {
         name: 'SUPERMAN',
+        realName: 'Clark Kent',
+        superpower: 'Super strength, flight, heat vision',
+        birthDate: new Date('1938-04-18'),
       };
 
       let error: any;
@@ -82,7 +109,13 @@ describe('MockSuperheroesService', () => {
 
   describe('update method', () => {
     it('should update an existing superhero', fakeAsync(() => {
-      const superheroToUpdate: Superhero = { id: 'a', name: 'Superman Prime' };
+      const superheroToUpdate: Superhero = {
+        id: '1738041600000001',
+        name: 'Superman Prime',
+        realName: 'Clark Kent',
+        superpower: 'Super strength, flight, heat vision, and more',
+        birthDate: new Date('1938-04-18'),
+      };
 
       let result: Superhero | undefined;
 
@@ -90,13 +123,27 @@ describe('MockSuperheroesService', () => {
         result = res;
       });
 
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      req.flush({});
+
       tick(delayTime);
 
       expect(result).toEqual(superheroToUpdate);
     }));
 
     it('should throw SuperheroNotFoundException if superhero does not exist', fakeAsync(() => {
-      const superheroToUpdate: Superhero = { id: 'z', name: 'Non Existent' };
+      const superheroToUpdate: Superhero = {
+        id: 'nonexistent123',
+        name: 'Non Existent',
+        realName: 'Non Existent',
+        superpower: 'Non Existent',
+        birthDate: new Date(),
+      };
 
       let error: any;
 
@@ -105,6 +152,14 @@ describe('MockSuperheroesService', () => {
         error: (err: any) => (error = err),
       });
 
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      req.flush({});
+
       tick(delayTime);
 
       expect(error).toBeInstanceOf(SuperheroNotFoundException);
@@ -112,7 +167,13 @@ describe('MockSuperheroesService', () => {
     }));
 
     it('should throw NameAlreadyExistsException if new name is already taken by another superhero', fakeAsync(() => {
-      const superheroToUpdate: Superhero = { id: 'a', name: 'Batman' };
+      const superheroToUpdate: Superhero = {
+        id: '1738041600000001',
+        name: 'Batman',
+        realName: 'Bruce Wayne',
+        superpower: 'Intellect, martial arts, technology',
+        birthDate: new Date('1939-05-27'),
+      };
 
       let error: any;
 
@@ -121,6 +182,14 @@ describe('MockSuperheroesService', () => {
         error: (err: any) => (error = err),
       });
 
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      req.flush({});
+
       tick(delayTime);
 
       expect(error).toBeInstanceOf(NameAlreadyExistsException);
@@ -128,13 +197,27 @@ describe('MockSuperheroesService', () => {
     }));
 
     it('should not throw NameAlreadyExistsException if name is unchanged', fakeAsync(() => {
-      const superheroToUpdate: Superhero = { id: 'a', name: 'Superman' };
+      const superheroToUpdate: Superhero = {
+        id: '1738041600000001',
+        name: 'Superman',
+        realName: 'Clark Kent',
+        superpower: 'Super strength, flight, heat vision',
+        birthDate: new Date('1938-04-18'),
+      };
 
       let result: Superhero | undefined;
 
       service
         .update(superheroToUpdate)
         .subscribe((res: Superhero) => (result = res));
+
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      req.flush({});
 
       tick(delayTime);
 
@@ -142,13 +225,27 @@ describe('MockSuperheroesService', () => {
     }));
 
     it('should be case insensitive when updating superhero names', fakeAsync(() => {
-      const superheroToUpdate: Superhero = { id: 'a', name: 'superman' };
+      const superheroToUpdate: Superhero = {
+        id: '1738041600000001',
+        name: 'superman',
+        realName: 'Clark Kent',
+        superpower: 'Super strength, flight, heat vision',
+        birthDate: new Date('1938-04-18'),
+      };
 
       let result: Superhero | undefined;
 
       service
         .update(superheroToUpdate)
         .subscribe((res: Superhero) => (result = res));
+
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      req.flush({});
 
       tick(delayTime);
 
@@ -158,11 +255,19 @@ describe('MockSuperheroesService', () => {
 
   describe('delete method', () => {
     it('should delete a superhero', fakeAsync(() => {
-      const idToDelete = 'a';
+      const idToDelete = '1738041600000001';
 
       let superheroes: Superhero[] = [];
 
       service.delete(idToDelete).subscribe();
+
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+
+      expect(req.request.method).toBe('GET');
+
+      req.flush({});
 
       tick(delayTime);
 
@@ -175,7 +280,7 @@ describe('MockSuperheroesService', () => {
     }));
 
     it('should throw SuperheroNotFoundException if superhero does not exist', fakeAsync(() => {
-      const idToDelete = 'z';
+      const idToDelete = 'nonexistent123';
 
       let error: any;
 
@@ -183,6 +288,12 @@ describe('MockSuperheroesService', () => {
         next: () => fail('should have failed with SuperheroNotFoundException'),
         error: (err: any) => (error = err),
       });
+
+      const req = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush({});
 
       tick(delayTime);
 
@@ -230,7 +341,7 @@ describe('MockSuperheroesService', () => {
 
   describe('getById method', () => {
     it('should return a superhero if found', fakeAsync(() => {
-      const idToFind = 'a';
+      const idToFind = '1738041600000001';
       let result: Superhero | null | undefined;
 
       service.getById(idToFind).subscribe((res: Superhero | null) => {
@@ -245,7 +356,7 @@ describe('MockSuperheroesService', () => {
     }));
 
     it('should throw SuperheroNotFoundException if superhero is not found', fakeAsync(() => {
-      const idToFind = 'z';
+      const idToFind = 'nonexistent123';
       let error: any;
 
       service.getById(idToFind).subscribe({
@@ -324,7 +435,12 @@ describe('MockSuperheroesService', () => {
 
   describe('integration tests', () => {
     it('should create, update, and delete a superhero successfully', fakeAsync(() => {
-      const newSuperhero: Superhero = { name: 'Green Arrow' };
+      const newSuperhero: Superhero = {
+        name: 'Green Arrow',
+        realName: 'Oliver Queen',
+        superpower: 'Archery',
+        birthDate: new Date('1941-11-01'),
+      };
       let createdSuperhero: Superhero | undefined;
 
       service.create(newSuperhero).subscribe((res: Superhero) => {
@@ -339,6 +455,9 @@ describe('MockSuperheroesService', () => {
       const updatedSuperhero: Superhero = {
         id: createdSuperhero!.id,
         name: 'Green Arrow Updated',
+        realName: 'Oliver Queen',
+        superpower: 'Master archer',
+        birthDate: new Date('1941-11-01'),
       };
 
       let updateResult: Superhero | undefined;
@@ -346,6 +465,12 @@ describe('MockSuperheroesService', () => {
       service.update(updatedSuperhero).subscribe((res: Superhero) => {
         updateResult = res;
       });
+
+      const updateReq = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+      expect(updateReq.request.method).toBe('GET');
+      updateReq.flush({});
 
       tick(delayTime);
 
@@ -356,6 +481,12 @@ describe('MockSuperheroesService', () => {
       service.delete(createdSuperhero!.id!).subscribe(() => {
         deleteCompleted = true;
       });
+
+      const deleteReq = httpTestingController.expectOne(
+        'https://jsonplaceholder.typicode.com/posts/1'
+      );
+      expect(deleteReq.request.method).toBe('GET');
+      deleteReq.flush({});
 
       tick(delayTime);
 

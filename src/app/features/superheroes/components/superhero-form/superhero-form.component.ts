@@ -14,6 +14,9 @@ import { MatInputModule } from '@angular/material/input';
 import { UppercaseInputDirective } from '@shared/directives/uppercase-input.directive';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
 
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
 @Component({
   selector: 'app-superhero-form',
   imports: [
@@ -24,6 +27,8 @@ import { Superhero } from '@superheroes/interfaces/superhero.interface';
     CommonModule,
     ReactiveFormsModule,
     UppercaseInputDirective,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './superhero-form.component.html',
   styleUrl: './superhero-form.component.scss',
@@ -47,6 +52,19 @@ export class SuperheroFormComponent {
         Validators.minLength(2),
         Validators.maxLength(50),
       ]),
+      realName: new FormControl(superheroToEdit?.realName ?? '', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+      ]),
+      superpower: new FormControl(superheroToEdit?.superpower ?? '', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100),
+      ]),
+      birthDate: new FormControl(superheroToEdit?.birthDate ?? null, [
+        Validators.required,
+      ]),
     });
   }
 
@@ -55,9 +73,10 @@ export class SuperheroFormComponent {
       return;
     }
 
-    const name = this.superheroForm.get('name')?.value?.trim() ?? '';
-
-    const superhero: Superhero = { ...this.data?.superheroForUpdate, name };
+    const superhero: Superhero = {
+      ...this.data?.superheroForUpdate,
+      ...this.superheroForm.value,
+    };
 
     this.superheroForm.reset();
 

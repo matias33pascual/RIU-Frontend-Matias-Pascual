@@ -1,35 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  computed,
-  inject,
-  Injectable,
-  signal,
-  WritableSignal,
-} from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { DELAY_MS } from '@constants';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
   NameAlreadyExistsException,
   SuperheroNotFoundException,
 } from '@exceptions';
+import { INITIAL_SUPERHEROES } from '@superheroes/data/superheroes.data';
 import { Superhero } from '@superheroes/interfaces/superhero.interface';
 import { SuperheroesRepository } from '@superheroes/interfaces/superheroes.repository';
-import { asyncScheduler, delay, scheduled, switchMap, throwError } from 'rxjs';
+import { asyncScheduler, scheduled, switchMap, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MockSuperheroesService implements SuperheroesRepository {
-  private readonly _delay = DELAY_MS;
   private readonly http = inject(HttpClient);
 
   private _superheroes: WritableSignal<Superhero[]> = signal<Superhero[]>([
-    { id: 'a', name: 'Superman' },
-    { id: 'b', name: 'Batman' },
-    { id: 'c', name: 'Wonder Woman' },
-    { id: 'd', name: 'Flash' },
-    { id: 'e', name: 'Green Lantern' },
+    ...INITIAL_SUPERHEROES,
   ]);
 
   create(superhero: Superhero): Observable<Superhero> {
@@ -41,7 +29,7 @@ export class MockSuperheroesService implements SuperheroesRepository {
 
     const newSuperheroe: Superhero = {
       ...superhero,
-      id: Date.now().toString(),
+      id: this._generateId(),
     };
 
     this._superheroes.update((data) => [...data, newSuperheroe]);
@@ -49,7 +37,7 @@ export class MockSuperheroesService implements SuperheroesRepository {
   }
 
   update(superhero: Superhero): Observable<Superhero> {
-    return this.fakeHttpRequest().pipe(
+    return this._fakeHttpRequest().pipe(
       switchMap(() => {
         const existingSuperhero = this._findSuperheroById(superhero.id!);
 
@@ -83,7 +71,7 @@ export class MockSuperheroesService implements SuperheroesRepository {
   }
 
   delete(id: string): Observable<void> {
-    return this.fakeHttpRequest().pipe(
+    return this._fakeHttpRequest().pipe(
       switchMap(() => {
         const existingSuperhero = this._findSuperheroById(id);
 
@@ -103,7 +91,7 @@ export class MockSuperheroesService implements SuperheroesRepository {
   }
 
   getAll(): Observable<Superhero[]> {
-    return toObservable(computed(() => this._superheroes()));
+    return scheduled([this._superheroes()], asyncScheduler);
   }
 
   getById(id: string): Observable<Superhero | null> {
@@ -139,7 +127,13 @@ export class MockSuperheroesService implements SuperheroesRepository {
     );
   }
 
-  private fakeHttpRequest(): Observable<any> {
+  private _generateId(): string {
+    const timestamp = Date.now();
+    const randomSuffix = Math.floor(Math.random() * 999999) + 1;
+    return `${timestamp}${randomSuffix.toString().padStart(6, '0')}`;
+  }
+
+  private _fakeHttpRequest(): Observable<any> {
     return this.http.get('https://jsonplaceholder.typicode.com/posts/1');
   }
 }
