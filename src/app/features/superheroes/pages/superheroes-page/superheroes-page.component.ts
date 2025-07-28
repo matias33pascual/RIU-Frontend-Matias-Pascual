@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { SuperheroFormComponent } from '@superheroes/components/superhero-form/superhero-form.component';
 import { SuperheroSearchComponent } from '@superheroes/components/superhero-search/superhero-search.component';
 import { SuperheroesListComponent } from '@superheroes/components/superheroes-list/superheroes-list.component';
@@ -20,6 +22,7 @@ import { MockSuperheroesService } from '@superheroes/services/mock-superheroes.s
     SuperheroesListComponent,
     SuperheroSearchComponent,
     MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './superheroes-page.component.html',
   styleUrl: './superheroes-page.component.scss',
