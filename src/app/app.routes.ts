@@ -9,6 +9,13 @@ export const routes: Routes = [
       ).then((c) => c.SuperheroesPageComponent),
   },
   {
+    path: 'about',
+    loadComponent: () =>
+      import('./features/about/about-page/about-page.component').then(
+        (c) => c.AboutPageComponent
+      ),
+  },
+  {
     path: '',
     redirectTo: 'superheroes',
     pathMatch: 'full',
