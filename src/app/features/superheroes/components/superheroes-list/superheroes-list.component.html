@@ -1,10 +1,5 @@
 <div class="superheroes-table">
   <table mat-table [dataSource]="dataSource">
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef>No.</th>
-      <td mat-cell *matCellDef="let superhero; let i = index">{{ i + 1 }}</td>
-    </ng-container>
-
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nombre</th>
       <td mat-cell *matCellDef="let superhero">{{ superhero.name }}</td>
@@ -42,19 +37,13 @@
 
     <tr
       mat-header-row
-      *matHeaderRowDef="[
-        'position',
-        'name',
-        'realName',
-        'superpower',
-        'actions'
-      ]"
+      *matHeaderRowDef="['name', 'realName', 'superpower', 'actions']"
     ></tr>
     <tr
       mat-row
       *matRowDef="
         let row;
-        columns: ['position', 'name', 'realName', 'superpower', 'actions']
+        columns: ['name', 'realName', 'superpower', 'actions']
       "
     ></tr>
 
