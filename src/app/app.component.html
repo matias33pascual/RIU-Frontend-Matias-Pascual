@@ -1,1 +1,11 @@
-<router-outlet /> <app-loading />
+<mat-toolbar color="primary">
+  <span>Superhéroes App</span>
+  <span class="spacer"></span>
+  <nav>
+    <a mat-button routerLink="/superheroes">Superhéroes</a>
+    <a mat-button routerLink="/about">Acerca de</a>
+  </nav>
+</mat-toolbar>
+
+<router-outlet />
+<app-loading />

@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+@import "@angular/material/prebuilt-themes/magenta-violet.css";
 
 html {
   color-scheme: light dark;
@@ -22,4 +23,13 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: var(--mat-sys-onsurface);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  display: flex;
+  align-items: center;
 }

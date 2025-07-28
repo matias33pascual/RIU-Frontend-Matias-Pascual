@@ -1,0 +1,15 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+nav a {
+  margin-left: 16px;
+}
+
+nav a.mat-mdc-button {
+  color: white;
+}
+
+nav a.mat-mdc-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
