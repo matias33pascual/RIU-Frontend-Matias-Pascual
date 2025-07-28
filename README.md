@@ -6,4 +6,4 @@ Permite crear, editar, eliminar y buscar superhéroes.
 
 ## Autor
 
-Matias
+Matias Pascual
