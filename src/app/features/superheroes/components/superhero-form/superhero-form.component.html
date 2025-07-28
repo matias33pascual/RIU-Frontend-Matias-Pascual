@@ -1,13 +1,19 @@
 <mat-card class="superhero-form-card">
   <mat-card-header>
-    <mat-card-title class="card-title">Nuevo Superhéroe</mat-card-title>
-    <mat-card-subtitle class="card-subtitle"
-      >Introduce los datos del nuevo superhéroe</mat-card-subtitle
-    >
+    <mat-card-title class="card-title">
+      {{ isEditing ? "Editar Superhéroe" : "Nuevo Superhéroe" }}
+    </mat-card-title>
+    <mat-card-subtitle class="card-subtitle">
+      {{
+        isEditing
+          ? "Modifica los datos del superhéroe"
+          : "Introduce los datos del nuevo superhéroe"
+      }}
+    </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content class="superhero-form-content">
-    <form [formGroup]="superheroForm">
+    <form [formGroup]="superheroForm" class="superhero-form">
       <mat-form-field appearance="outline">
         <mat-label>Nombre</mat-label>
         <input
@@ -18,13 +24,19 @@
           required
           type="text"
         />
-        <mat-error *ngIf="superheroForm.controls['name'].errors?.['required']">
+        <mat-error
+          *ngIf="superheroForm.controls['name'].errors?.['required'] && superheroForm.controls['name'].touched"
+        >
           El nombre es obligatorio
         </mat-error>
-        <mat-error *ngIf="superheroForm.controls['name'].errors?.['minlength']">
+        <mat-error
+          *ngIf="superheroForm.controls['name'].errors?.['minlength'] && superheroForm.controls['name'].touched"
+        >
           Mínimo 2 caracteres
         </mat-error>
-        <mat-error *ngIf="superheroForm.controls['name'].errors?.['maxlength']">
+        <mat-error
+          *ngIf="superheroForm.controls['name'].errors?.['maxlength'] && superheroForm.controls['name'].touched"
+        >
           Máximo 50 caracteres
         </mat-error>
       </mat-form-field>
@@ -39,17 +51,17 @@
           type="text"
         />
         <mat-error
-          *ngIf="superheroForm.controls['realName'].errors?.['required']"
+          *ngIf="superheroForm.controls['realName'].errors?.['required'] && superheroForm.controls['realName'].touched"
         >
           El nombre real es obligatorio
         </mat-error>
         <mat-error
-          *ngIf="superheroForm.controls['realName'].errors?.['minlength']"
+          *ngIf="superheroForm.controls['realName'].errors?.['minlength'] && superheroForm.controls['realName'].touched"
         >
           Mínimo 2 caracteres
         </mat-error>
         <mat-error
-          *ngIf="superheroForm.controls['realName'].errors?.['maxlength']"
+          *ngIf="superheroForm.controls['realName'].errors?.['maxlength'] && superheroForm.controls['realName'].touched"
         >
           Máximo 50 caracteres
         </mat-error>
@@ -65,21 +77,21 @@
           type="text"
         />
         <mat-error
-          *ngIf="superheroForm.controls['superpower'].errors?.['required']"
+          *ngIf="superheroForm.controls['superpower'].errors?.['required'] && superheroForm.controls['superpower'].touched"
         >
           El superpoder es obligatorio
         </mat-error>
         <mat-error
-          *ngIf="superheroForm.controls['superpower'].errors?.['minlength']"
+          *ngIf="superheroForm.controls['superpower'].errors?.['minlength'] && superheroForm.controls['superpower'].touched"
         >
           Mínimo 2 caracteres
         </mat-error>
         <mat-error
-          *ngIf="superheroForm.controls['superpower'].errors?.['maxlength']"
+          *ngIf="superheroForm.controls['superpower'].errors?.['maxlength'] && superheroForm.controls['superpower'].touched"
         >
           Máximo 100 caracteres
         </mat-error>
-      </mat-form-field>      
+      </mat-form-field>
     </form>
   </mat-card-content>
 
@@ -91,7 +103,7 @@
       (click)="onSave()"
       [disabled]="!superheroForm.valid"
     >
-      Guardar
+      {{ isEditing ? "Actualizar" : "Guardar" }}
     </button>
     <button mat-button type="button" (click)="onCancel()">Cancelar</button>
   </mat-card-actions>

@@ -38,6 +38,8 @@ export class SuperheroFormComponent {
   saveOrUpdateSuperhero = output<Superhero>();
 
   superheroForm: FormGroup;
+  isEditing: boolean;
+  formSubmitted: boolean = false;
 
   constructor(
     @Optional()
@@ -45,6 +47,7 @@ export class SuperheroFormComponent {
     public data: { superheroForUpdate: Superhero | null } | null
   ) {
     const superheroToEdit = this.data?.superheroForUpdate ?? null;
+    this.isEditing = superheroToEdit !== null;
 
     this.superheroForm = new FormGroup({
       name: new FormControl(superheroToEdit?.name ?? '', [
@@ -66,6 +69,8 @@ export class SuperheroFormComponent {
   }
 
   onSave() {
+    this.formSubmitted = true;
+
     if (this.superheroForm.invalid) {
       return;
     }
@@ -76,12 +81,21 @@ export class SuperheroFormComponent {
     };
 
     this.superheroForm.reset();
+    this.formSubmitted = false;
 
     this.saveOrUpdateSuperhero.emit(superhero);
   }
 
   onCancel() {
     this.superheroForm.reset();
+    this.formSubmitted = false;
+    this.superheroForm.markAsUntouched();
+    this.superheroForm.markAsPristine();
+
+    Object.keys(this.superheroForm.controls).forEach((key) => {
+      this.superheroForm.get(key)?.markAsUntouched();
+      this.superheroForm.get(key)?.markAsPristine();
+    });
 
     this.cancel.emit();
   }

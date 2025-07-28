@@ -15,11 +15,6 @@ export class UppercaseInputDirective {
     this.transformToUppercase();
   }
 
-  @HostListener('blur', ['$event'])
-  onBlur(event: Event): void {
-    this.transformToUppercase();
-  }
-
   @HostListener('paste', ['$event'])
   onPaste(event: ClipboardEvent): void {
     setTimeout(() => this.transformToUppercase(), 10);
