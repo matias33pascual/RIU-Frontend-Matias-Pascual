@@ -4,8 +4,3 @@
 
 [[plugins]]
   package = "@netlify/angular-runtime"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
