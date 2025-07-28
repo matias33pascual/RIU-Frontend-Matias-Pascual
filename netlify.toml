@@ -4,8 +4,6 @@
 
 [[plugins]]
   package = "@netlify/angular-runtime"
-  [plugins.inputs]
-    version = "2.4.0"
 
 # Redirección para SPA fallback
 [[redirects]]
