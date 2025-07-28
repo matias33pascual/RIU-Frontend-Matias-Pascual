@@ -5,7 +5,6 @@
 [[plugins]]
   package = "@netlify/angular-runtime"
 
-# Redirección para SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
