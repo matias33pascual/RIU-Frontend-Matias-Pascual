@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'superheroes',
+    pathMatch: 'full',
+  },
+  {
     path: 'superheroes',
     loadComponent: () =>
       import(
@@ -14,10 +19,5 @@ export const routes: Routes = [
       import('./features/about/about-page/about-page.component').then(
         (c) => c.AboutPageComponent
       ),
-  },
-  {
-    path: '',
-    redirectTo: 'superheroes',
-    pathMatch: 'full',
   },
 ];

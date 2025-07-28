@@ -9,8 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:RIU-Frontend-Matias-Pascual": "node dist/riu-frontend-matias-pascual/server/server.mjs",
-    "build:ssr": "ng build && ng run RIU-Frontend-Matias-Pascual:server",
-    "serve:ssr": "node dist/RIU-Frontend-Matias-Pascual/server/main.js"
+    "build:ssr": "ng build --configuration production",
+    "serve:ssr": "node dist/riu-frontend-matias-pascual/server/server.mjs"
   },
   "private": true,
   "dependencies": {
