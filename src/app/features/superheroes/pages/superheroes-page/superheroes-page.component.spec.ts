@@ -70,16 +70,20 @@ describe('SuperheroesPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render the search and list components', () => {
+  it('should render the search and list components', async () => {
     const search = fixture.debugElement.query(
       By.directive(SuperheroSearchComponent)
     );
+
+    expect(search).toBeTruthy();
+
+    fixture.detectChanges();
+    await fixture.whenStable();
 
     const list = fixture.debugElement.query(
       By.directive(SuperheroesListComponent)
     );
 
-    expect(search).toBeTruthy();
     expect(list).toBeTruthy();
   });
 
