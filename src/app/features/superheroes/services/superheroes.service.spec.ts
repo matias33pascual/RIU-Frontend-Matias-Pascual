@@ -495,4 +495,34 @@ describe('MockSuperheroesService', () => {
       ).toBeUndefined();
     }));
   });
+
+  describe('basic service functionality', () => {
+    it('should handle observable responses correctly', fakeAsync(() => {
+      let result: Superhero[] | undefined;
+
+      service.getAll().subscribe((res: Superhero[]) => {
+        result = res;
+      });
+
+      tick(delayTime);
+
+      expect(result).toBeDefined();
+      expect(result!.length).toBeGreaterThan(0);
+    }));
+
+    it('should filter superheroes correctly', fakeAsync(() => {
+      let result: Superhero[] | undefined;
+
+      service.getAll().subscribe((res: Superhero[]) => {
+        result = res;
+      });
+
+      tick(delayTime);
+
+      expect(result).toBeDefined();
+      expect(result!.length).toBeGreaterThan(0);
+
+      expect(result!.some((hero) => hero.name.includes('Superman'))).toBe(true);
+    }));
+  });
 });
