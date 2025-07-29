@@ -142,7 +142,13 @@ export class SuperheroesPageComponent {
 
   private _createNewSuperhero(superhero: Superhero) {
     this._superheroesService.create(superhero).subscribe({
-      next: () => {
+      next: (createdSuperhero: Superhero) => {
+        this._allSuperheroes.update((list) => [...list, createdSuperhero]);
+
+        if (this._isSearching()) {
+          this._searchResults.update((list) => [...list, createdSuperhero]);
+        }
+
         this.searchTerm.set('');
       },
       error: (err) => {
@@ -154,12 +160,12 @@ export class SuperheroesPageComponent {
   private _editSuperhero(superhero: Superhero) {
     this._superheroesService.update(superhero).subscribe({
       next: () => {
+        this._allSuperheroes.update((list) =>
+          list.map((item) => (item.id === superhero.id ? superhero : item))
+        );
+
         if (this._isSearching()) {
           this._searchResults.update((list) =>
-            list.map((item) => (item.id === superhero.id ? superhero : item))
-          );
-        } else {
-          this._allSuperheroes.update((list) =>
             list.map((item) => (item.id === superhero.id ? superhero : item))
           );
         }
