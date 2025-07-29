@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci --only=production
+RUN npm ci
 
 COPY . .
 
@@ -23,4 +23,4 @@ EXPOSE 4000
 
 USER node
 
-CMD ["node", "dist/RIU-Frontend-Matias-Pascual/server/main.js"]
+CMD ["node", "dist/riu-frontend-matias-pascual/server/server.mjs"]
