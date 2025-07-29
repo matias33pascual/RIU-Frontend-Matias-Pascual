@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { AppComponent } from './app.component';
 
@@ -13,11 +13,11 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         AppComponent,
-        RouterTestingModule,
         MatToolbarModule,
         MatButtonModule,
         LoadingComponent,
       ],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);

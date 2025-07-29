@@ -43,16 +43,6 @@ describe('UppercaseInputDirective', () => {
   it('should convert input to uppercase on input event', () => {
     const input = inputEl.nativeElement;
 
-    input.value = 'superman';
-    input.dispatchEvent(new Event('input'));
-
-    expect(input.value).toBe('SUPERMAN');
-    expect(component.testForm.get('testInput')?.value).toBe('SUPERMAN');
-  });
-
-  it('should convert input to uppercase on input event', () => {
-    const input = inputEl.nativeElement;
-
     input.value = 'batman';
     input.dispatchEvent(new Event('input'));
 

@@ -8,6 +8,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SweetAlertService } from '@core/services/sweet-alert.service';
 import { SuperheroFormComponent } from '@superheroes/components/superhero-form/superhero-form.component';
 import { SuperheroSearchComponent } from '@superheroes/components/superhero-search/superhero-search.component';
 import { SuperheroesListComponent } from '@superheroes/components/superheroes-list/superheroes-list.component';
@@ -31,6 +32,7 @@ export class SuperheroesPageComponent {
   private readonly _superheroesService: SuperheroesRepository = inject(
     MockSuperheroesService
   );
+  private readonly _sweetAlert = inject(SweetAlertService);
 
   private readonly _allSuperheroes = signal<Superhero[]>([]);
   private readonly _searchResults = signal<Superhero[]>([]);
@@ -53,7 +55,10 @@ export class SuperheroesPageComponent {
         this._allSuperheroes.set(results);
       },
       error: (error) => {
-        console.error('Error fetching superheroes:', error);
+        this._sweetAlert.error(
+          'Error al cargar superhéroes',
+          'No se pudieron cargar los superhéroes.'
+        );
       },
     });
   }
@@ -101,19 +106,24 @@ export class SuperheroesPageComponent {
   }
 
   deleteSuperhero($event: Superhero) {
-    if (confirm(`¿Seguro que querés borrar a ${$event.name}?`)) {
-      this._superheroesService.delete($event.id!).subscribe({
-        next: () => {
-          this._searchResults.update((list) =>
-            list.filter((item) => item.id !== $event.id)
-          );
-          this._allSuperheroes.update((list) =>
-            list.filter((item) => item.id !== $event.id)
-          );
-        },
-        error: (err) => alert(err.message),
-      });
-    }
+    this._sweetAlert.confirmDelete($event.name).then((result) => {
+      if (result.isConfirmed) {
+        this._superheroesService.delete($event.id!).subscribe({
+          next: () => {
+            this._searchResults.update((list) =>
+              list.filter((item) => item.id !== $event.id)
+            );
+            this._allSuperheroes.update((list) =>
+              list.filter((item) => item.id !== $event.id)
+            );
+
+            this._sweetAlert.success(`${$event.name} ya no está en la lista`);
+          },
+          error: (err) =>
+            this._sweetAlert.error('Error al eliminar', err.message),
+        });
+      }
+    });
   }
 
   private _openSuperheroForm(superhero: Superhero | null = null) {
@@ -149,29 +159,37 @@ export class SuperheroesPageComponent {
           this._searchResults.update((list) => [...list, createdSuperhero]);
         }
 
-        this.searchTerm.set('');
+        this._sweetAlert.success(`¡${createdSuperhero.name} ha sido creado!`);
       },
       error: (err) => {
-        alert(err.message);
+        this._sweetAlert.error('Error al crear superhéroe', err.message);
       },
     });
   }
 
   private _editSuperhero(superhero: Superhero) {
     this._superheroesService.update(superhero).subscribe({
-      next: () => {
+      next: (updatedSuperhero: Superhero) => {
         this._allSuperheroes.update((list) =>
-          list.map((item) => (item.id === superhero.id ? superhero : item))
+          list.map((item) =>
+            item.id === updatedSuperhero.id ? updatedSuperhero : item
+          )
         );
 
         if (this._isSearching()) {
           this._searchResults.update((list) =>
-            list.map((item) => (item.id === superhero.id ? superhero : item))
+            list.map((item) =>
+              item.id === updatedSuperhero.id ? updatedSuperhero : item
+            )
           );
         }
+
+        this._sweetAlert.success(
+          `¡${updatedSuperhero.name} ha sido actualizado!`
+        );
       },
       error: (err) => {
-        alert(err.message);
+        this._sweetAlert.error('Error al actualizar superhéroe', err.message);
       },
     });
   }
