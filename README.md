@@ -4,9 +4,6 @@ Aplicación web para gestión de superhéroes desarrollada con Angular 19, Angul
 
 Permite crear, editar, eliminar y buscar superhéroes.
 
-# Deploy
-[RIU Frontend Superheroes](https://riu-frontend-matiaspascual.netlify.app/superheroes)
-
 ## Autor
 
 Matias Pascual
