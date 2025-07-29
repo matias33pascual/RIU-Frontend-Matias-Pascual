@@ -110,13 +110,7 @@ export class SuperheroesPageComponent {
       if (result.isConfirmed) {
         this._superheroesService.delete($event.id!).subscribe({
           next: () => {
-            this._searchResults.update((list) =>
-              list.filter((item) => item.id !== $event.id)
-            );
-            this._allSuperheroes.update((list) =>
-              list.filter((item) => item.id !== $event.id)
-            );
-
+            this._refreshAllLists();
             this._sweetAlert.success(`${$event.name} ya no está en la lista`);
           },
           error: (err) =>
@@ -153,12 +147,7 @@ export class SuperheroesPageComponent {
   private _createNewSuperhero(superhero: Superhero) {
     this._superheroesService.create(superhero).subscribe({
       next: (createdSuperhero: Superhero) => {
-        this._allSuperheroes.update((list) => [...list, createdSuperhero]);
-
-        if (this._isSearching()) {
-          this._searchResults.update((list) => [...list, createdSuperhero]);
-        }
-
+        this._refreshAllLists();
         this._sweetAlert.success(`¡${createdSuperhero.name} ha sido creado!`);
       },
       error: (err) => {
@@ -170,26 +159,50 @@ export class SuperheroesPageComponent {
   private _editSuperhero(superhero: Superhero) {
     this._superheroesService.update(superhero).subscribe({
       next: (updatedSuperhero: Superhero) => {
-        this._allSuperheroes.update((list) =>
-          list.map((item) =>
-            item.id === updatedSuperhero.id ? updatedSuperhero : item
-          )
-        );
-
-        if (this._isSearching()) {
-          this._searchResults.update((list) =>
-            list.map((item) =>
-              item.id === updatedSuperhero.id ? updatedSuperhero : item
-            )
-          );
-        }
-
+        this._refreshAllLists();
         this._sweetAlert.success(
           `¡${updatedSuperhero.name} ha sido actualizado!`
         );
       },
       error: (err) => {
         this._sweetAlert.error('Error al actualizar superhéroe', err.message);
+      },
+    });
+  }
+
+  private _refreshAllLists(): void {
+    this._refreshMainList();
+
+    if (this._isSearching()) {
+      this._refreshSearchResults();
+    }
+  }
+
+  private _refreshMainList(): void {
+    this._superheroesService.getAll().subscribe({
+      next: (allSuperheroes) => {
+        this._allSuperheroes.set(allSuperheroes);
+      },
+      error: (err) => {
+        this._sweetAlert.error(
+          'Error al cargar superhéroes',
+          'No se pudieron cargar los superhéroes.'
+        );
+      },
+    });
+  }
+
+  private _refreshSearchResults(): void {
+    this._superheroesService.getByName(this.searchTerm()).subscribe({
+      next: (results) => {
+        this._searchResults.set(results);
+      },
+      error: (err) => {
+        this._searchResults.set([]);
+        this._sweetAlert.error(
+          'Error en la búsqueda',
+          'No se pudieron obtener los resultados.'
+        );
       },
     });
   }
